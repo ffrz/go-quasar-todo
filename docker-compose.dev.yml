@@ -1,0 +1,14 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: todo-backend
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend:/app # mount kode agar Air autoreload jalan
+      - ./backend/data:/app/data # mount folder database
+    environment:
+      - DB_PATH=/app/data/todo.db
+      - PORT=8080

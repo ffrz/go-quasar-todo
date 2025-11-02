@@ -1,10 +1,13 @@
-version: "3.8"
 services:
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: todo-backend-prod
     ports:
       - "8080:8080"
     volumes:
-      - ./backend/data:/data
+      - ./backend/data:/app/data
     environment:
-      - APP_PORT=8080
+      - PORT=8080
+      - DB_PATH=/app/data/todo.db

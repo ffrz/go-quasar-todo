@@ -1,17 +1,18 @@
-# builder
-FROM golang:1.21 as builder
-WORKDIR /src
+# Stage 1: Build
+FROM golang:1.25-alpine AS builder
+RUN apk add --no-cache gcc musl-dev sqlite-dev bash git
+WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
-RUN CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o /app/server ./cmd/server
+RUN go build -o tmp/main ./cmd/server
 
-
+# Stage 2: Runtime minimal
 FROM alpine:3.18
-RUN addgroup -S app && adduser -S app -G app
-COPY --from=builder /app/server /server
-RUN mkdir /data && chown app:app /data
-USER app
-WORKDIR /
+RUN apk add --no-cache ca-certificates sqlite bash
+WORKDIR /app
+COPY --from=builder /app/tmp/main ./tmp/main
 EXPOSE 8080
-ENTRYPOINT ["/server"]
+ENV PORT=8080
+ENV DB_PATH=/app/data/todo.db
+CMD ["./tmp/main"]

@@ -30,7 +30,7 @@ func main() {
 
 	root := app.Group("/")
 	root.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hellos")
+		return c.SendString("Hello, World!!")
 	})
 
 	api.RegisterRoutes(app, db)

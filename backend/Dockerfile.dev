@@ -1,0 +1,25 @@
+# Dockerfile untuk development (Air + autoreload)
+FROM golang:1.25-alpine
+
+# Install dependencies tambahan
+RUN apk add --no-cache bash git gcc musl-dev sqlite sqlite-dev
+
+WORKDIR /app
+
+# Copy go.mod & go.sum dulu untuk caching
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Copy seluruh source code
+COPY . .
+
+# Install Air versi kompatibel
+RUN go install github.com/air-verse/air@v1.61.7
+
+# Volume untuk database
+VOLUME ["/app/data"]
+
+EXPOSE 8080
+
+# Jalankan Air autoreload
+CMD ["air"]
