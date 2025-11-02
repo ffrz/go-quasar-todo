@@ -1,0 +1,7 @@
+- Run backend app locally: Done
+- Run backend app locally with air: Done
+- Run app within container for production: Done
+- Run app within container for development with Air: Done
+- Setup mysql (container, config, test CRUD)
+- Setup postgres (container, config, test CRUD)
+- Setup backend modular directory structures
